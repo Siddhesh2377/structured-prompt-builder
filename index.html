@@ -249,6 +249,39 @@
 <body class="bg-gray-100 dark:bg-neutral-950 font-sans">
 <!-- Header (already good) -->
 <header class="hdr">
+    <div
+            class="mx-auto max-w-5xl rounded-md border border-amber-300 bg-amber-50 text-amber-900
+           dark:border-amber-700 dark:bg-amber-900/40 dark:text-amber-100 shadow-sm
+           px-4 py-3 flex items-start sm:items-center gap-3 animate-fadeIn"
+            role="status" aria-live="polite"
+    >
+        <!-- Icon -->
+        <svg class="w-5 h-5 shrink-0 mt-0.5 sm:mt-0 text-amber-600 dark:text-amber-400"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 8v4m0 4h.01"></path>
+        </svg>
+
+        <!-- Message -->
+        <div class="text-sm leading-snug">
+            <strong class="font-semibold">Exciting News!</strong>
+            A new version of this project will be released soon.
+            <a href="https://github.com/Siddhesh2377/PromptHub" target="_blank" rel="noopener"
+               class="underline font-medium hover:text-amber-800 dark:hover:text-amber-200">
+                Check out PromptHub →
+            </a>
+        </div>
+
+        <!-- Close Button -->
+        <button id="alertClose"
+                class="ml-auto text-amber-900/70 hover:text-amber-900 dark:text-amber-100/70 dark:hover:text-amber-100 transition"
+                aria-label="Dismiss notification">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6 6 18M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
     <div class="w-full max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-col gap-2">
         <!-- Row 1: Brand + a couple of primary actions that should always be visible -->
         <div class="flex items-center justify-between gap-3">
