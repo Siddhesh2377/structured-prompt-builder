@@ -63,7 +63,8 @@ A lightweight, browser‑first tool for designing **well‑structured AI prompts
 
 > Tip: For the strictest structure preservation, choose **JSON** as the output format.
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Siddhesh2377/structured-prompt-builder&type=Date)](https://star-history.com/Siddhesh2377/structured-prompt-builder)
+![Star History Chart](https://api.star-history.com/svg?repos=Siddhesh2377/structured-prompt-builder&type=Date&cachebust={{DATE}})
+
 
 ## Project Structure
 
