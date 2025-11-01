@@ -1,519 +1,1355 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Structured Prompt Builder | Free AI Prompt Engineering Tool</title>
-    <link rel="canonical" href="https://structured-prompt-builder.vercel.app/" />
-
-    <!-- Primary Meta -->
-    <meta name="title" content="Structured Prompt Builder | Free AI Prompt Engineering Tool" />
-    <meta name="description" content="Free, browser‑based Structured Prompt Builder. Create prompts with role, task, constraints, steps, inputs, and examples. Export JSON, YAML, Markdown. Save to local library. Gemini optimizer included." />
-    <meta name="keywords" content="structured prompt builder, ai prompt builder, prompt engineering tool, free prompt tool, json schema prompts, yaml prompts, markdown prompts, few-shot examples, gemini optimizer, ai writing tool, open source prompt builder, browser prompt builder, local prompt library, free ai tools, prompt templates, llm prompts, prompt editor" />
-    <meta name="author" content="Siddhesh Sonar" />
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-    <meta name="theme-color" content="#111111" />
-
-    <!-- Icons & PWA -->
-    <link rel="icon" href="/res/favicon.ico" />
-    <link rel="apple-touch-icon" href="/res/icon-192.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <meta name="application-name" content="Structured Prompt Builder" />
-    <meta name="apple-mobile-web-app-title" content="Structured Prompt Builder" />
-    <meta name="format-detection" content="telephone=no" />
-
-    <!-- Performance hints -->
-    <link rel="preconnect" href="https://unpkg.com" crossorigin />
-    <link rel="dns-prefetch" href="https://unpkg.com" />
-    <!-- Preload hero image so LCP paints sooner -->
-    <link rel="preload" as="image" href="/res/preview.webp" imagesrcset="/res/preview.webp" imagesizes="100vw" />
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://structured-prompt-builder.vercel.app/" />
-    <meta property="og:title" content="Structured Prompt Builder | Free AI Prompt Engineering Tool" />
-    <meta property="og:description" content="Free Structured Prompt Builder. Design, preview, and optimize AI prompts. Supports Markdown, JSON, YAML, and Gemini optimization." />
-    <meta property="og:image" content="https://structured-prompt-builder.vercel.app/res/preview.png" />
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://structured-prompt-builder.vercel.app/" />
-    <meta name="twitter:title" content="Structured Prompt Builder | Free AI Prompt Engineering Tool" />
-    <meta name="twitter:description" content="Free Structured Prompt Builder. Create prompts with role, task, constraints, steps, inputs, and examples. Export JSON, YAML, Markdown. Local library + Gemini optimizer." />
-    <meta name="twitter:image" content="https://structured-prompt-builder.vercel.app/res/preview.png" />
-
-    <!-- Sitemap -->
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/crawler/sitemap.xml" />
-
-    <!-- JSON-LD Schema.org (WebApplication) -->
-    <script type="application/ld+json">{
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Structured Prompt Builder",
-        "url": "https://structured-prompt-builder.vercel.app/",
-        "description": "Free browser‑based AI prompt builder with structured fields, local prompt library, and Gemini optimization.",
-        "applicationCategory": "AI Tool",
-        "operatingSystem": "Any",
-        "author": { "@type": "Person", "name": "Siddhesh Sonar" },
-        "license": "https://opensource.org/licenses/MIT",
-        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-        "image": "https://structured-prompt-builder.vercel.app/res/preview.png"
-    }</script>
-
-    <!-- Tailwind CDN (kept for now to avoid breaking styles) -->
-    <script src="https://cdn.tailwindcss.com" defer></script>
-
-    <!-- React UMD + ReactDOM UMD (defer to avoid blocking HTML parse) -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin defer></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin defer></script>
-
-    <!-- NOTE: In-browser Babel is heavy and delays FCP. Step 2 will remove it. For now, load it deferred. -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js" defer></script>
-
-    <!-- Plain CSS (critical styles only) -->
+    <title>Structured Prompt Builder</title>
+    <meta name="description" content="Minimal prompt builder with built-in editors" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
     <style>
-        :root { color-scheme: light dark; }
-
-        /* Card */
-        .card {
-            background:#fff;
-            border:1px solid #e5e7eb;
-            border-radius:.75rem;
-            box-shadow:0 1px 3px rgba(0,0,0,.08);
-        }
-        .dark .card {
-            background:#0a0a0a;
-            border-color:#262626;
-        }
-
-        /* Field */
-        .field {
-            width:100%;
-            border:1px solid #d1d5db;
-            border-radius:.375rem;
-            padding:.5rem .75rem;
-            font-size:.875rem;
-            background:#f9fafb;
-            color:#111827;
-        }
-        .field:focus {
-            outline:none;
-            box-shadow:0 0 0 2px rgba(79,70,229,.4);
-            border-color:#6366f1;
-        }
-        .dark .field {
-            background:#0f0f0f;
-            color:#fafafa;
-            border-color:#404040;
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            --border: #e5e7eb;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-light: #dbeafe;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
         }
 
-        /* Labels */
-        .label {
-            display:block;
-            font-size:.85rem;
-            font-weight:500;
-            color:#374151;
-            margin-bottom:.25rem;
-        }
-        .dark .label { color:#d4d4d4; }
-
-        /* Buttons */
-        .btn {
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            border-radius:.375rem;
-            padding:.5rem .75rem;
-            font-size:.875rem;
-            font-weight:500;
-            transition:background .15s;
-        }
-        .btn-primary {
-            color:#fff;
-            background:#4f46e5;
-        }
-        .btn-primary:hover { background:#4338ca; }
-        .btn-muted {
-            background:#f9fafb;
-            color:#111827;
-            border:1px solid #e5e7eb;
-        }
-        .btn-muted:hover { background:#e5e7eb; }
-        .dark .btn-muted {
-            background:#1a1a1a;
-            color:#e5e7eb;
-            border:1px solid #333;
-        }
-        .dark .btn-muted:hover { background:#2a2a2a; }
-
-        /* Tabs */
-        .tabs button {
-            margin-right:.5rem;
-            padding:.25rem .75rem;
-            font-size:.875rem;
-            font-weight:600;
-            border-radius:.375rem;
-        }
-        .tabs .active {
-            background:#4f46e5;
-            color:#fff;
-        }
-        .tabs button:not(.active) {
-            background:#f3f4f6;
-            color:#1f2937;
-        }
-        .dark .tabs button:not(.active) {
-            background:#1a1a1a;
-            color:#d4d4d4;
+        [data-theme="dark-slate"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --border: #334155;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-light: #1e3a8a;
         }
 
-        /* Preview */
-        .preview {
-            background:#f3f4f6;
-            color:#111827;
-            border:1px solid #e5e7eb;
-            border-radius:.5rem;
-            padding:.75rem;
-            font-family:ui-monospace,Menlo,Consolas,"Courier New",monospace;
-            font-size:.875rem;
-            overflow:auto;
-        }
-        .dark .preview {
-            background:#0f0f0f;
-            color:#fafafa;
-            border-color:#333;
-        }
-        .reading .preview {
-            font-family:ui-serif,Georgia,"Times New Roman",serif;
-            line-height:1.75;
-            font-size:.95rem;
+        [data-theme="dark-midnight"] {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: #171717;
+            --text-primary: #fafafa;
+            --text-secondary: #a3a3a3;
+            --text-tertiary: #737373;
+            --border: #262626;
+            --accent: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --accent-light: #4c1d95;
         }
 
-        .sponsor-fab{
-            position:fixed; right:16px; bottom:16px; z-index:50;
-            display:inline-flex; align-items:center; gap:.5rem;
-            padding:.55rem .8rem; border-radius:.5rem;
-            background:#fdf2f8; color:#9d174d; border:1px solid #f5c2db;
-            box-shadow:0 4px 14px rgba(0,0,0,.08);
+        [data-theme="light-warm"] {
+            --bg-primary: #fffbeb;
+            --bg-secondary: #fef3c7;
+            --bg-tertiary: #fde68a;
+            --text-primary: #78350f;
+            --text-secondary: #92400e;
+            --text-tertiary: #b45309;
+            --border: #fbbf24;
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --accent-light: #fef3c7;
         }
-        .sponsor-fab:hover{ background:#fde2f2; }
-        .dark .sponsor-fab{
-            background:#831843; color:#fff; border-color:#9d174d;
+
+        [data-theme="light-cool"] {
+            --bg-primary: #f0f9ff;
+            --bg-secondary: #e0f2fe;
+            --bg-tertiary: #bae6fd;
+            --text-primary: #0c4a6e;
+            --text-secondary: #075985;
+            --text-tertiary: #0284c7;
+            --border: #7dd3fc;
+            --accent: #0ea5e9;
+            --accent-hover: #0284c7;
+            --accent-light: #e0f2fe;
         }
-        .dark .sponsor-fab:hover{ background:#6d0f37; }
-        @media (min-width: 640px){
-            .sponsor-fab{ bottom:22px; right:22px; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
         }
-        /* Mobile polish for the sticky header */
-        .hdr {
-            position: sticky; top: 0; z-index: 20;
-            background: color-mix(in oklab, #fff 90%, transparent);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid #e5e7eb;
-            padding-top: max(0px, env(safe-area-inset-top));
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
-        .dark .hdr {
-            background: color-mix(in oklab, #111 80%, transparent);
-            border-color: #262626;
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        /* Horizontal action strip on mobile */
-        .hdr-actions {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            gap: .5rem;
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .hdr-actions::-webkit-scrollbar { display: none; }
-        /* Tighten touch targets on xs, keep generous on sm+ */
+
+        .theme-selector {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .theme-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .theme-btn:hover { transform: scale(1.1); }
+        .theme-btn.active { box-shadow: 0 0 0 2px var(--accent); }
+
+        .theme-btn-default { background: linear-gradient(135deg, #ffffff 50%, #1f2937 50%); }
+        .theme-btn-slate { background: #1e293b; }
+        .theme-btn-midnight { background: #000000; }
+        .theme-btn-warm { background: #fef3c7; }
+        .theme-btn-cool { background: #e0f2fe; }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 1024px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .nav-actions {
+                order: 2;
+                justify-content: center;
+            }
+
+            .theme-selector {
+                order: 3;
+                justify-content: center;
+            }
+
+            .logo {
+                justify-content: center;
+            }
+        }
+
         @media (max-width: 640px) {
-            .hdr-btn { padding: .45rem .55rem; }
-            .hdr-badge { height: 1.1rem; min-width: 1.1rem; font-size: 10px; }
-            .hdr-title { font-size: 1.05rem; }
-            .hdr-sub { display: none; }
+            .nav-btn span:not(.icon) {
+                display: none;
+            }
+
+            .nav-btn {
+                padding: 0.5rem;
+            }
+        }
+
+        .panel-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .nav-btn-primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .nav-btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        textarea.input {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+        }
+
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .list-item {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        .list-item .input {
+            flex: 1;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px 6px 0 0;
+            transition: all 0.2s ease;
+        }
+
+        .tab:hover { background: var(--bg-tertiary); }
+        .tab.active {
+            color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .editor {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 500px;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            overflow: auto;
+            white-space: pre-wrap;
+        }
+
+        .editor[contenteditable="true"] {
+            outline: none;
+        }
+
+        .editor[contenteditable="true"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        .library-item {
+            padding: 1rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .library-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow);
+        }
+
+        .library-item-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .library-item-meta {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0.75rem;
+        }
+
+        .model-select {
+            position: relative;
+        }
+
+        select.input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            padding-right: 2.5rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            padding: 0.75rem;
+            background: #fee;
+            border: 1px solid #fcc;
+            border-radius: 8px;
+            color: #c00;
+            font-size: 0.875rem;
+            margin-top: 0.75rem;
+        }
+
+        .success {
+            padding: 0.75rem;
+            background: #efe;
+            border: 1px solid #cfc;
+            border-radius: 8px;
+            color: #060;
+            font-size: 0.875rem;
+            margin-top: 0.75rem;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-tertiary);
+            transform: translateY(-1px);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn-icon:hover {
+            background: var(--bg-tertiary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .share-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .share-menu.active {
+            display: block;
+            animation: slideIn 0.2s ease;
+        }
+
+        .share-item {
+            padding: 0.5rem 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .share-item:hover {
+            background: var(--bg-tertiary);
         }
     </style>
 </head>
-<a  id="sponsorFab"
-    class="sponsor-fab"
-    href="https://github.com/sponsors/Siddhesh2377?utm_source=app&utm_medium=fab&utm_campaign=spb"
-    target="_blank" rel="noopener"
-    aria-label="Sponsor Structured Prompt Builder">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3
-             c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3
-             19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-    </svg>
-    <span class="hidden sm:inline">Sponsor</span>
-</a>
-
-<body class="bg-gray-100 dark:bg-neutral-950 font-sans">
-<!-- Header (already good) -->
-<header class="hdr">
-    <div
-            class="mx-auto max-w-5xl rounded-md border border-amber-300 bg-amber-50 text-amber-900
-           dark:border-amber-700 dark:bg-amber-900/40 dark:text-amber-100 shadow-sm
-           px-4 py-3 flex items-start sm:items-center gap-3 animate-fadeIn"
-            role="status" aria-live="polite"
-    >
-        <!-- Icon -->
-        <svg class="w-5 h-5 shrink-0 mt-0.5 sm:mt-0 text-amber-600 dark:text-amber-400"
-             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             aria-hidden="true">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 8v4m0 4h.01"></path>
-        </svg>
-
-        <!-- Message -->
-        <div class="text-sm leading-snug">
-            <strong class="font-semibold">Exciting News!</strong>
-            A new version of this project will be released soon.
-            <a href="https://github.com/Siddhesh2377/PromptHub" target="_blank" rel="noopener"
-               class="underline font-medium hover:text-amber-800 dark:hover:text-amber-200">
-                Check out PromptHub →
-            </a>
-        </div>
-
-        <!-- Close Button -->
-        <button id="alertClose"
-                class="ml-auto text-amber-900/70 hover:text-amber-900 dark:text-amber-100/70 dark:hover:text-amber-100 transition"
-                aria-label="Dismiss notification">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M18 6 6 18M6 6l12 12"></path>
+<body>
+<header class="header">
+    <div class="header-content">
+        <a href="/" class="logo float-animation">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
             </svg>
-        </button>
-    </div>
-    <div class="w-full max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-col gap-2">
-        <!-- Row 1: Brand + a couple of primary actions that should always be visible -->
-        <div class="flex items-center justify-between gap-3">
-            <a href="/" class="min-w-0 inline-flex items-center gap-2 text-left">
-                <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M15 4V2M15 8v2M19 6h2M11 6H9M18.364 1.636l-1.414 1.414M18.364 10.364l-1.414-1.414M11.05 1.636 12.464 3.05M11.05 10.364 12.464 8.95"/>
-                    <path d="m3 21 9-9"/><path d="M5 19l-2-2"/>
+            Structured Prompt Builder
+        </a>
+
+        <div class="nav-actions">
+            <a href="changelog.html" class="nav-btn" title="Change Log">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
                 </svg>
-                <div class="leading-tight min-w-0">
-                    <h1 class="hdr-title font-semibold text-gray-900 dark:text-white tracking-tight truncate">Structured Prompt Builder</h1>
-                    <p class="hdr-sub text-xs text-gray-600 dark:text-neutral-400 truncate">
-                        Build structured prompts • Export JSON/YAML/Markdown • Free & browser-based
-                    </p>
+                Change Log
+            </a>
+
+            <a href="https://github.com/Siddhesh2377/structured-prompt-builder" target="_blank" rel="noopener" class="nav-btn" title="GitHub">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                    <path d="M9 18c-4.51 2-5-2-7-2"/>
+                </svg>
+                GitHub
+            </a>
+
+            <a href="https://github.com/sponsors/Siddhesh2377" target="_blank" rel="noopener" class="nav-btn nav-btn-primary pulse-animation" title="Sponsor">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                Sponsor
+            </a>
+
+            <div style="position: relative;">
+                <button class="nav-btn-icon" id="shareBtn" title="Share">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <circle cx="18" cy="5" r="3"/>
+                        <circle cx="6" cy="12" r="3"/>
+                        <circle cx="18" cy="19" r="3"/>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                    </svg>
+                </button>
+                <div class="share-menu" id="shareMenu">
+                    <a href="#" class="share-item" id="copyLink">
+                        <svg class="icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                        </svg>
+                        Copy Link
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?text=Check%20out%20Structured%20Prompt%20Builder&url=https://structured-prompt-builder.vercel.app" target="_blank" class="share-item">
+                        <svg class="icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                            <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+                        </svg>
+                        Share on X
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://structured-prompt-builder.vercel.app" target="_blank" class="share-item">
+                        <svg class="icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                            <rect x="2" y="9" width="4" height="12"/>
+                            <circle cx="4" cy="4" r="2"/>
+                        </svg>
+                        Share on LinkedIn
+                    </a>
                 </div>
-            </a>
-
-            <!-- Primary quick toggles (icon-first, label hidden on mobile) -->
-            <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-                <button id="themeToggle"
-                        class="hdr-btn rounded-md border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-2 hover:bg-gray-50 dark:hover:bg-neutral-800"
-                        title="Toggle dark / light" aria-label="Toggle theme">
-                    <svg id="sunIcon" class="w-5 h-5 hidden dark:inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-                    </svg>
-                    <svg id="moonIcon" class="w-5 h-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </svg>
-                </button>
-
-                <button id="readingToggle"
-                        class="hdr-btn rounded-md border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2.5 sm:px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-neutral-800"
-                        title="Reading mode" aria-label="Reading mode">
-          <span class="inline-flex items-center gap-2">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M20 22V6a2 2 0 0 0-2-2H7.5A2.5 2.5 0 0 0 5 6.5V22"/><path d="M8 2v4"/>
-            </svg>
-            <span class="hidden sm:inline">Reading</span>
-          </span>
-                </button>
-
-                <button id="notifBell"
-                        class="hdr-btn relative rounded-md border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-2 hover:bg-gray-50 dark:hover:bg-neutral-800"
-                        title="Notifications" aria-label="Notifications">
-                    <svg class="w-5 h-5 text-gray-800 dark:text-gray-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path d="M6 8a6 6 0 0 1 12 0v4l1.5 3H4.5L6 12V8Z"></path>
-                        <path d="M10 19a2 2 0 0 0 4 0"></path>
-                    </svg>
-                    <span id="notifBadge"
-                          class="hdr-badge absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full bg-pink-500 text-white text-[10px] leading-4 text-center shadow ring-2 ring-white dark:ring-neutral-900">
-            1
-          </span>
-                </button>
             </div>
+
+            <button class="nav-btn-icon" id="bookmarkBtn" title="Bookmark">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                </svg>
+            </button>
         </div>
 
-        <!-- Row 2: horizontally scrollable toolbar on mobile -->
-        <div class="hdr-actions flex items-center -mx-1 px-1 sm:mx-0 sm:px-0">
-            <a href="/changelog.html"
-               class="hdr-btn inline-flex items-center gap-2 rounded-md border border-gray-200 dark:border-neutral-700
-                bg-white dark:bg-neutral-900 px-3 py-2 text-sm font-medium text-gray-900 dark:text-white
-                hover:bg-gray-50 dark:hover:bg-neutral-800 transition"
-               title="See release notes & updates" aria-label="Change Log">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path d="M3 5h18M3 12h18M3 19h18"/>
-                </svg>
-                <span class="hidden sm:inline">Change Log</span>
-            </a>
-
-            <a href="https://github.com/Siddhesh2377/structured-prompt-builder" target="_blank" rel="noopener"
-               class="hdr-btn inline-flex items-center gap-2 rounded-md border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm font-medium text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-neutral-800 transition"
-               aria-label="GitHub repository">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.03-.02-2.02-3.2.7-3.88-1.37-3.88-1.37-.53-1.35-1.3-1.71-1.3-1.71-1.06-.73.08-.72.08-.72 1.17.08 1.79 1.21 1.79 1.21 1.05 1.79 2.76 1.27 3.44.97.11-.76.41-1.27.75-1.56-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.28 1.2-3.08-.12-.3-.52-1.5.11-3.12 0 0 .98-.31 3.22 1.2.93-.26 1.93-.4 2.93-.4s2 .14 2.93.4c2.24-1.51 3.22-1.2 3.22-1.2.63 1.62.23 2.82.11 3.12.75.8 1.2 1.82 1.2 3.08 0 4.42-2.7 5.39-5.28 5.68.42.36.8 1.06.8 2.14 0 1.54-.01 2.79-.01 3.17 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
-                <span class="hidden sm:inline">GitHub</span>
-            </a>
-
-            <a href="https://github.com/Siddhesh2377/structured-prompt-builder/stargazers" target="_blank" rel="noopener"
-               class="hdr-btn inline-flex items-center rounded-md border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2.5 py-2 hover:bg-gray-50 dark:hover:bg-neutral-800 transition"
-               aria-label="GitHub Stars">
-                <img src="https://img.shields.io/github/stars/Siddhesh2377/structured-prompt-builder?style=social"
-                     alt="GitHub stars" class="h-5 sm:h-6" loading="lazy" />
-            </a>
-
-            <a href="https://github.com/sponsors/Siddhesh2377"
-               class="hdr-btn inline-flex items-center gap-2 rounded-md border border-pink-200 dark:border-pink-700 bg-pink-50 dark:bg-pink-900/40 px-3 py-2 text-sm font-medium text-pink-700 dark:text-pink-200 hover:bg-pink-100 dark:hover:bg-pink-800 transition"
-               target="_blank" rel="noopener" aria-label="Sponsor">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-                <span class="hidden sm:inline">Sponsor</span>
-            </a>
+        <div class="theme-selector">
+            <button class="theme-btn theme-btn-default active" data-theme="default" title="Default"></button>
+            <button class="theme-btn theme-btn-slate" data-theme="dark-slate" title="Dark Slate"></button>
+            <button class="theme-btn theme-btn-midnight" data-theme="dark-midnight" title="Dark Midnight"></button>
+            <button class="theme-btn theme-btn-warm" data-theme="light-warm" title="Light Warm"></button>
+            <button class="theme-btn theme-btn-cool" data-theme="light-cool" title="Light Cool"></button>
         </div>
     </div>
 </header>
 
-<div id="siteAlert" class="px-4">
-    <div class="mx-auto max-w-3xl rounded-lg border border-amber-200 bg-amber-50 text-amber-900
-              dark:border-amber-700 dark:bg-amber-900/40 dark:text-amber-100 shadow-sm
-              px-3 py-2 flex items-start gap-3" role="status" aria-live="polite">
-        <svg class="w-5 h-5 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"></circle><path d="M12 8v4m0 4h.01"></path>
-        </svg>
-        <div class="text-sm">
-            <strong>Love this tool?</strong> Sponsor the developer to keep it free and fast.
-            <a class="underline font-medium" href="https://github.com/sponsors/Siddhesh2377" target="_blank" rel="noopener">Become a sponsor</a>.
+<div class="container">
+    <div class="panel">
+        <h2 class="panel-title">Prompt Composition</h2>
+
+        <div class="form-group">
+            <label class="label">Title</label>
+            <input type="text" class="input" id="title" placeholder="Enter prompt title">
         </div>
-        <button id="alertClose" class="ml-auto text-amber-900/70 hover:text-amber-900 dark:text-amber-100/70 dark:hover:text-amber-100" aria-label="Dismiss">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"></path></svg>
-        </button>
+
+        <div class="form-group">
+            <label class="label">Role</label>
+            <input type="text" class="input" id="role" placeholder="e.g., Expert AI Assistant">
+        </div>
+
+        <div class="form-group">
+            <label class="label">Task</label>
+            <textarea class="input" id="task" placeholder="Describe the main task"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="label">Context</label>
+            <textarea class="input" id="context" placeholder="Additional context"></textarea>
+        </div>
+
+        <div class="form-group">
+            <div class="section-header">
+                <label class="label">Constraints</label>
+                <button class="btn btn-secondary" id="addConstraint">Add</button>
+            </div>
+            <div id="constraintsList"></div>
+        </div>
+
+        <div class="form-group">
+            <div class="section-header">
+                <label class="label">Examples</label>
+                <button class="btn btn-secondary" id="addExample">Add</button>
+            </div>
+            <div id="examplesList"></div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" id="savePrompt">Save to Library</button>
+            <button class="btn btn-secondary" id="loadSample">Load Sample</button>
+            <button class="btn btn-secondary" id="clearAll">Clear</button>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <h3 class="panel-title">Library</h3>
+            <div id="libraryList"></div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2 class="panel-title">Preview & Test</h2>
+
+        <div class="tabs">
+            <button class="tab active" data-editor="json">JSON</button>
+            <button class="tab" data-editor="markdown">Markdown</button>
+            <button class="tab" data-editor="text">Plain Text</button>
+        </div>
+
+        <div class="editor" contenteditable="true" id="editor"></div>
+
+        <div style="margin-top: 1.5rem;">
+            <h3 class="panel-title">Test with AI</h3>
+
+            <div class="form-group">
+                <label class="label">OpenRouter API Key</label>
+                <input type="password" class="input" id="apiKey" placeholder="Enter your OpenRouter API key">
+            </div>
+
+            <div class="form-group">
+                <label class="label">Model</label>
+                <div class="model-select">
+                    <select class="input" id="modelSelect" disabled>
+                        <option value="">Enter API key to load models</option>
+                    </select>
+                </div>
+                <div id="modelLoading" style="display: none; margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div class="loading"></div> Loading models...
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Test Input</label>
+                <textarea class="input" id="testInput" placeholder="Enter test input"></textarea>
+            </div>
+
+            <div id="advancedParams" style="display: none; animation: slideIn 0.3s ease;">
+                <h3 class="panel-title" style="margin-top: 1.5rem;">Advanced Parameters</h3>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="label">Temperature (0-2)</label>
+                        <input type="number" class="input" id="temperature" value="1.0" min="0" max="2" step="0.1">
+                        <small style="color: var(--text-tertiary); font-size: 0.75rem;">Higher = more creative</small>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="label">Max Tokens</label>
+                        <input type="number" class="input" id="maxTokens" value="2048" min="1" max="32000" step="1">
+                        <small style="color: var(--text-tertiary); font-size: 0.75rem;">Maximum response length</small>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="label">Top P (0-1)</label>
+                        <input type="number" class="input" id="topP" value="1.0" min="0" max="1" step="0.05">
+                        <small style="color: var(--text-tertiary); font-size: 0.75rem;">Nucleus sampling</small>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="label">Top K</label>
+                        <input type="number" class="input" id="topK" value="0" min="0" max="100" step="1">
+                        <small style="color: var(--text-tertiary); font-size: 0.75rem;">0 = disabled</small>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="label">Frequency Penalty</label>
+                        <input type="number" class="input" id="frequencyPenalty" value="0" min="-2" max="2" step="0.1">
+                        <small style="color: var(--text-tertiary); font-size: 0.75rem;">Reduce repetition</small>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="label">Presence Penalty</label>
+                        <input type="number" class="input" id="presencePenalty" value="0" min="-2" max="2" step="0.1">
+                        <small style="color: var(--text-tertiary); font-size: 0.75rem;">Encourage new topics</small>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <label class="label" style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                        <input type="checkbox" id="streamEnabled" style="width: auto; margin: 0;">
+                        Enable Streaming Response
+                    </label>
+
+                    <label class="label" style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                        <input type="checkbox" id="jsonMode" style="width: auto; margin: 0;">
+                        JSON Mode (response_format)
+                    </label>
+                </div>
+            </div>
+
+            <div class="btn-group" style="margin-top: 1rem;">
+                <button class="btn btn-primary" id="testPrompt" disabled>Test Prompt</button>
+                <button class="btn btn-secondary" id="toggleAdvanced">Advanced Settings</button>
+            </div>
+
+            <div id="testResult"></div>
+        </div>
     </div>
 </div>
 
-<style>
-    /* Alert banner animation – independent of Tailwind utilities */
-    #siteAlert{
-        position:fixed;left:0;right:0;z-index:9999;
-        top:var(--hdr,56px);
-        opacity:0;transform:translateY(-12px);visibility:hidden;
-        transition:transform .25s ease-out, opacity .25s ease-out, visibility 0s linear .25s;
-        pointer-events:none;
-    }
-    #siteAlert.show{
-        opacity:1;transform:translateY(0);visibility:visible;
-        transition:transform .25s ease-out, opacity .25s ease-out;
-        pointer-events:auto;
-    }
-</style>
-
-
-
-
-<main id="root" class="min-h-screen"></main>
-
-<!-- No-JS info for crawlers/users -->
-<noscript>
-    <section class="max-w-6xl mx-auto px-4 py-8">
-        <h2>About this tool</h2>
-        <p>This site requires JavaScript to run the builder UI, but you can still read about features above. Enable JavaScript to use the app.</p>
-        <picture>
-            <source srcset="/res/preview.webp" type="image/webp" />
-            <img src="/res/preview.png" alt="Structured Prompt Builder UI preview" width="1200" height="630" loading="lazy" decoding="async" />
-        </picture>
-    </section>
-</noscript>
-
 <script>
-    (function () {
-        const header   = document.querySelector('header');
-        const alertEl  = document.getElementById('siteAlert');
-        const closeBtn = document.getElementById('alertClose');
-        const bell     = document.getElementById('notifBell');
-        const badge    = document.getElementById('notifBadge');
+    const state = {
+        theme: localStorage.getItem('theme') || 'default',
+        constraints: [],
+        examples: [],
+        currentEditor: 'json',
+        library: JSON.parse(localStorage.getItem('promptLibrary') || '[]'),
+        models: []
+    };
 
-        const AUTO_HIDE_MS = 4000;
-        let hideTimer = null;
-        let isOpen = false;
+    function init() {
+        document.documentElement.setAttribute('data-theme', state.theme);
+        document.querySelector(`[data-theme="${state.theme}"]`)?.classList.add('active');
 
-        function setHeaderVar(){
-            const h = (header?.offsetHeight || 56) + 'px';
-            document.documentElement.style.setProperty('--hdr', h);
-        }
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                state.theme = btn.dataset.theme;
+                localStorage.setItem('theme', state.theme);
+                document.documentElement.setAttribute('data-theme', state.theme);
+                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
 
-        function showAlert(){
-            if (isOpen) return;
-            isOpen = true;
-            setHeaderVar();
-            alertEl.classList.add('show');          // smooth fade/slide in
-            badge && (badge.style.display = 'none'); // hide bubble while banner is visible
-            clearTimeout(hideTimer);
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                hideTimer = setTimeout(hideAlert, AUTO_HIDE_MS);
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                state.currentEditor = tab.dataset.editor;
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                updatePreview();
+            });
+        });
+
+        document.getElementById('addConstraint').addEventListener('click', addConstraint);
+        document.getElementById('addExample').addEventListener('click', addExample);
+        document.getElementById('savePrompt').addEventListener('click', savePrompt);
+        document.getElementById('loadSample').addEventListener('click', loadSamplePrompt);
+        document.getElementById('clearAll').addEventListener('click', clearAll);
+        document.getElementById('testPrompt').addEventListener('click', testPrompt);
+        document.getElementById('toggleAdvanced').addEventListener('click', toggleAdvanced);
+
+        document.getElementById('shareBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('shareMenu').classList.toggle('active');
+        });
+
+        document.getElementById('copyLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            navigator.clipboard.writeText(window.location.href);
+            const item = e.currentTarget;
+            const originalText = item.innerHTML;
+            item.innerHTML = `
+            <svg class="icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Copied!
+        `;
+            setTimeout(() => {
+                item.innerHTML = originalText;
+                document.getElementById('shareMenu').classList.remove('active');
+            }, 1500);
+        });
+
+        document.getElementById('bookmarkBtn').addEventListener('click', () => {
+            if (window.sidebar && window.sidebar.addPanel) {
+                window.sidebar.addPanel(document.title, window.location.href, '');
+            } else if (window.external && ('AddFavorite' in window.external)) {
+                window.external.AddFavorite(window.location.href, document.title);
+            } else {
+                alert('Press ' + (navigator.userAgent.toLowerCase().indexOf('mac') != -1 ? 'Cmd' : 'Ctrl') + '+D to bookmark this page.');
             }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#shareBtn') && !e.target.closest('#shareMenu')) {
+                document.getElementById('shareMenu').classList.remove('active');
+            }
+        });
+
+        const apiKeyInput = document.getElementById('apiKey');
+        const savedKey = localStorage.getItem('openrouter_api_key');
+        if (savedKey) {
+            apiKeyInput.value = savedKey;
+            fetchModels(savedKey);
         }
 
-        function hideAlert(){
-            if (!isOpen) return;
-            isOpen = false;
-            alertEl.classList.remove('show');       // smooth fade/slide out
-            // bubble comes back to indicate there is a message
-            badge && (badge.style.display = '');
-            clearTimeout(hideTimer);
+        apiKeyInput.addEventListener('blur', async (e) => {
+            const key = e.target.value.trim();
+            if (key) {
+                localStorage.setItem('openrouter_api_key', key);
+                await fetchModels(key);
+            } else {
+                localStorage.removeItem('openrouter_api_key');
+                disableTestControls();
+            }
+        });
+
+        ['title', 'role', 'task', 'context'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updatePreview);
+        });
+
+        renderLibrary();
+        updatePreview();
+    }
+
+    function toggleAdvanced() {
+        const params = document.getElementById('advancedParams');
+        const btn = document.getElementById('toggleAdvanced');
+        if (params.style.display === 'none') {
+            params.style.display = 'block';
+            btn.textContent = 'Hide Advanced';
+        } else {
+            params.style.display = 'none';
+            btn.textContent = 'Advanced Settings';
         }
+    }
 
-        // Always show on first load
-        document.addEventListener('DOMContentLoaded', () => {
-            setHeaderVar();
-            // ensure Tailwind (deferred) has injected styles, then show
-            requestAnimationFrame(showAlert);
-        });
+    function disableTestControls() {
+        document.getElementById('modelSelect').disabled = true;
+        document.getElementById('modelSelect').innerHTML = '<option value="">Enter API key to load models</option>';
+        document.getElementById('testPrompt').disabled = true;
+    }
 
-        window.addEventListener('resize', setHeaderVar);
-        closeBtn?.addEventListener('click', hideAlert);
-        bell?.addEventListener('click', () => (isOpen ? hideAlert() : showAlert()));
-    })();
-</script>
+    function enableTestControls() {
+        document.getElementById('testPrompt').disabled = false;
+    }
 
+    async function fetchModels(apiKey) {
+        const modelSelect = document.getElementById('modelSelect');
+        const loadingDiv = document.getElementById('modelLoading');
 
+        loadingDiv.style.display = 'block';
+        modelSelect.disabled = true;
 
-<!-- Theme/Reading toggles (kept; runs fast) -->
-<script>
-    (function () {
-        const root = document.documentElement; const body = document.body;
-        const storedTheme = localStorage.getItem('spb-theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = storedTheme || (prefersDark ? 'dark' : 'light');
-        if (theme === 'dark') root.classList.add('dark');
-        const reading = localStorage.getItem('spb-reading') === '1';
-        if (reading) body.classList.add('reading');
-        document.getElementById('themeToggle')?.addEventListener('click', () => {
-            root.classList.toggle('dark');
-            localStorage.setItem('spb-theme', root.classList.contains('dark') ? 'dark' : 'light');
-        });
-        document.getElementById('readingToggle')?.addEventListener('click', () => {
-            body.classList.toggle('reading');
-            localStorage.setItem('spb-reading', body.classList.contains('reading') ? '1' : '0');
-        });
-    })();
-</script>
+        try {
+            const response = await fetch('https://openrouter.ai/api/v1/models', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'HTTP-Referer': window.location.origin,
+                    'X-Title': 'Structured Prompt Builder'
+                }
+            });
 
-<!-- Analytics & Speed Insights: load when idle (does not block paint) -->
-<script>
-    (function loadAnalyticsIdle(){
-        const loader = () => {
-            var s1 = document.createElement('script'); s1.src = '/_vercel/insights/script.js'; s1.defer = true; document.head.appendChild(s1);
-            var s2 = document.createElement('script'); s2.src = '/_vercel/speed-insights/script.js'; s2.defer = true; document.head.appendChild(s2);
+            if (!response.ok) {
+                throw new Error('Failed to fetch models');
+            }
+
+            const data = await response.json();
+            state.models = data.data || [];
+
+            const popularModels = [
+                'anthropic/claude-3.5-sonnet',
+                'anthropic/claude-3-opus',
+                'openai/gpt-4o',
+                'openai/gpt-4-turbo',
+                'google/gemini-pro-1.5',
+                'meta-llama/llama-3.1-70b-instruct',
+                'mistralai/mistral-large'
+            ];
+
+            modelSelect.innerHTML = '<optgroup label="Popular Models">';
+
+            popularModels.forEach(modelId => {
+                const model = state.models.find(m => m.id === modelId);
+                if (model) {
+                    modelSelect.innerHTML += `<option value="${model.id}">${model.name || model.id}</option>`;
+                }
+            });
+
+            modelSelect.innerHTML += '</optgroup><optgroup label="All Models">';
+
+            state.models
+                .filter(m => !popularModels.includes(m.id))
+                .sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id))
+                .forEach(model => {
+                    modelSelect.innerHTML += `<option value="${model.id}">${model.name || model.id}</option>`;
+                });
+
+            modelSelect.innerHTML += '</optgroup>';
+            modelSelect.disabled = false;
+            loadingDiv.style.display = 'none';
+            enableTestControls();
+
+        } catch (error) {
+            modelSelect.innerHTML = '<option value="">Error loading models - check API key</option>';
+            loadingDiv.style.display = 'none';
+            disableTestControls();
+            console.error('Error fetching models:', error);
+        }
+    }
+
+    function addConstraint() {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `
+                <input type="text" class="input" placeholder="Enter constraint">
+                <button class="icon-btn" onclick="this.parentElement.remove(); updatePreview()">×</button>
+            `;
+        div.querySelector('input').addEventListener('input', updatePreview);
+        document.getElementById('constraintsList').appendChild(div);
+    }
+
+    function addExample() {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `
+                <input type="text" class="input" placeholder="Enter example">
+                <button class="icon-btn" onclick="this.parentElement.remove(); updatePreview()">×</button>
+            `;
+        div.querySelector('input').addEventListener('input', updatePreview);
+        document.getElementById('examplesList').appendChild(div);
+    }
+
+    function getPromptData() {
+        const constraints = Array.from(document.querySelectorAll('#constraintsList input'))
+            .map(i => i.value).filter(Boolean);
+        const examples = Array.from(document.querySelectorAll('#examplesList input'))
+            .map(i => i.value).filter(Boolean);
+
+        return {
+            title: document.getElementById('title').value,
+            role: document.getElementById('role').value,
+            task: document.getElementById('task').value,
+            context: document.getElementById('context').value,
+            constraints,
+            examples
         };
-        if ('requestIdleCallback' in window) requestIdleCallback(loader); else setTimeout(loader, 1500);
-    })();
-</script>
+    }
 
-<!-- App scripts (deferred). NOTE: Step 2 will replace Babel with a prebuilt bundle. -->
-<script type="text/babel" data-presets="env,react" src="./src/utils/jsonToYaml.js" defer></script>
-<script type="text/babel" data-presets="env,react" src="./src/components/Section.jsx" defer></script>
-<script type="text/babel" data-presets="env,react" src="./src/app.jsx" defer></script>
+    function updatePreview() {
+        const data = getPromptData();
+        const editor = document.getElementById('editor');
+
+        if (state.currentEditor === 'json') {
+            editor.textContent = JSON.stringify(data, null, 2);
+        } else if (state.currentEditor === 'markdown') {
+            let md = `# ${data.title || 'Untitled Prompt'}\n\n`;
+            if (data.role) md += `**Role:** ${data.role}\n\n`;
+            if (data.task) md += `**Task:** ${data.task}\n\n`;
+            if (data.context) md += `**Context:** ${data.context}\n\n`;
+            if (data.constraints.length) {
+                md += `**Constraints:**\n${data.constraints.map(c => `- ${c}`).join('\n')}\n\n`;
+            }
+            if (data.examples.length) {
+                md += `**Examples:**\n${data.examples.map(e => `- ${e}`).join('\n')}\n`;
+            }
+            editor.textContent = md;
+        } else {
+            let text = data.title ? `${data.title}\n\n` : '';
+            if (data.role) text += `Role: ${data.role}\n`;
+            if (data.task) text += `Task: ${data.task}\n`;
+            if (data.context) text += `Context: ${data.context}\n`;
+            if (data.constraints.length) {
+                text += `\nConstraints:\n${data.constraints.map((c, i) => `${i + 1}. ${c}`).join('\n')}\n`;
+            }
+            if (data.examples.length) {
+                text += `\nExamples:\n${data.examples.join('\n')}\n`;
+            }
+            editor.textContent = text;
+        }
+    }
+
+    function savePrompt() {
+        const data = getPromptData();
+        if (!data.title) {
+            alert('Please enter a title');
+            return;
+        }
+
+        const prompt = {
+            id: Date.now(),
+            ...data,
+            timestamp: new Date().toISOString()
+        };
+
+        state.library.unshift(prompt);
+        localStorage.setItem('promptLibrary', JSON.stringify(state.library));
+        renderLibrary();
+
+        const result = document.getElementById('testResult');
+        result.innerHTML = '<div class="success">Prompt saved to library!</div>';
+        setTimeout(() => result.innerHTML = '', 3000);
+    }
+
+    function loadPrompt(id) {
+        const prompt = state.library.find(p => p.id === id);
+        if (!prompt) return;
+
+        document.getElementById('title').value = prompt.title;
+        document.getElementById('role').value = prompt.role;
+        document.getElementById('task').value = prompt.task;
+        document.getElementById('context').value = prompt.context;
+
+        document.getElementById('constraintsList').innerHTML = '';
+        prompt.constraints.forEach(c => {
+            addConstraint();
+            const inputs = document.querySelectorAll('#constraintsList input');
+            inputs[inputs.length - 1].value = c;
+        });
+
+        document.getElementById('examplesList').innerHTML = '';
+        prompt.examples.forEach(e => {
+            addExample();
+            const inputs = document.querySelectorAll('#examplesList input');
+            inputs[inputs.length - 1].value = e;
+        });
+
+        updatePreview();
+    }
+
+    function deletePrompt(id) {
+        state.library = state.library.filter(p => p.id !== id);
+        localStorage.setItem('promptLibrary', JSON.stringify(state.library));
+        renderLibrary();
+    }
+
+    function renderLibrary() {
+        const list = document.getElementById('libraryList');
+        if (state.library.length === 0) {
+            list.innerHTML = '<p style="color: var(--text-tertiary); font-size: 0.875rem;">No saved prompts</p>';
+            return;
+        }
+
+        list.innerHTML = state.library.map(p => `
+                <div class="library-item">
+                    <div class="library-item-title">${p.title}</div>
+                    <div class="library-item-meta">${new Date(p.timestamp).toLocaleDateString()}</div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="loadPrompt(${p.id})">Load</button>
+                        <button class="btn btn-secondary" onclick="deletePrompt(${p.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    function clearAll() {
+        if (!confirm('Clear all fields?')) return;
+        document.getElementById('title').value = '';
+        document.getElementById('role').value = '';
+        document.getElementById('task').value = '';
+        document.getElementById('context').value = '';
+        document.getElementById('constraintsList').innerHTML = '';
+        document.getElementById('examplesList').innerHTML = '';
+        updatePreview();
+    }
+
+    function loadSamplePrompt() {
+        document.getElementById('title').value = 'Content Summarization Assistant';
+        document.getElementById('role').value = 'Expert content analyst and technical writer';
+        document.getElementById('task').value = 'Analyze and summarize long-form content into clear, actionable insights while preserving key information and context';
+        document.getElementById('context').value = 'You will receive articles, documentation, or reports that need to be condensed for busy professionals who need to understand the core message quickly';
+
+        document.getElementById('constraintsList').innerHTML = '';
+        const sampleConstraints = [
+            'Keep summaries under 200 words',
+            'Maintain factual accuracy without interpretation',
+            'Highlight actionable items separately',
+            'Use bullet points for multiple key points'
+        ];
+        sampleConstraints.forEach(c => {
+            addConstraint();
+            const inputs = document.querySelectorAll('#constraintsList input');
+            inputs[inputs.length - 1].value = c;
+        });
+
+        document.getElementById('examplesList').innerHTML = '';
+        const sampleExamples = [
+            'Input: 5000-word research paper → Output: 150-word summary with 3 key findings',
+            'Input: Technical documentation → Output: Executive summary with implementation steps',
+            'Input: News article → Output: Brief with main points and implications'
+        ];
+        sampleExamples.forEach(e => {
+            addExample();
+            const inputs = document.querySelectorAll('#examplesList input');
+            inputs[inputs.length - 1].value = e;
+        });
+
+        updatePreview();
+
+        const result = document.getElementById('testResult');
+        result.innerHTML = '<div class="success">Sample prompt loaded successfully!</div>';
+        setTimeout(() => result.innerHTML = '', 3000);
+    }
+
+    async function testPrompt() {
+        const apiKey = document.getElementById('apiKey').value;
+        const model = document.getElementById('modelSelect').value;
+        const testInput = document.getElementById('testInput').value;
+        const resultDiv = document.getElementById('testResult');
+
+        if (!apiKey) {
+            resultDiv.innerHTML = '<div class="error">Please enter your OpenRouter API key</div>';
+            return;
+        }
+
+        if (!model) {
+            resultDiv.innerHTML = '<div class="error">Please select a model</div>';
+            return;
+        }
+
+        if (!testInput) {
+            resultDiv.innerHTML = '<div class="error">Please enter test input</div>';
+            return;
+        }
+
+        const data = getPromptData();
+        let promptText = '';
+        if (data.role) promptText += `Role: ${data.role}\n`;
+        if (data.task) promptText += `Task: ${data.task}\n`;
+        if (data.context) promptText += `Context: ${data.context}\n`;
+        if (data.constraints.length) {
+            promptText += `Constraints: ${data.constraints.join(', ')}\n`;
+        }
+        promptText += `\nInput: ${testInput}`;
+
+        const temperature = parseFloat(document.getElementById('temperature').value);
+        const maxTokens = parseInt(document.getElementById('maxTokens').value);
+        const topP = parseFloat(document.getElementById('topP').value);
+        const topK = parseInt(document.getElementById('topK').value);
+        const frequencyPenalty = parseFloat(document.getElementById('frequencyPenalty').value);
+        const presencePenalty = parseFloat(document.getElementById('presencePenalty').value);
+        const streamEnabled = document.getElementById('streamEnabled').checked;
+        const jsonMode = document.getElementById('jsonMode').checked;
+
+        const requestBody = {
+            model: model,
+            messages: [{ role: 'user', content: promptText }],
+            temperature: temperature,
+            max_tokens: maxTokens,
+            top_p: topP
+        };
+
+        if (topK > 0) requestBody.top_k = topK;
+        if (frequencyPenalty !== 0) requestBody.frequency_penalty = frequencyPenalty;
+        if (presencePenalty !== 0) requestBody.presence_penalty = presencePenalty;
+        if (streamEnabled) requestBody.stream = true;
+        if (jsonMode) requestBody.response_format = { type: 'json_object' };
+
+        resultDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;"><div class="loading"></div> Testing with ' + model + '...</div>';
+
+        try {
+            if (streamEnabled) {
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`,
+                        'HTTP-Referer': window.location.origin,
+                        'X-Title': 'Structured Prompt Builder'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let output = '';
+
+                resultDiv.innerHTML = `
+                        <div style="margin-top: 1rem;">
+                            <label class="label">AI Response (Streaming)</label>
+                            <div class="editor" style="min-height: 200px;" id="streamOutput"></div>
+                        </div>
+                    `;
+
+                const streamOutput = document.getElementById('streamOutput');
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6);
+                            if (data === '[DONE]') break;
+
+                            try {
+                                const parsed = JSON.parse(data);
+                                const content = parsed.choices?.[0]?.delta?.content || '';
+                                output += content;
+                                streamOutput.textContent = output;
+                            } catch (e) {
+                            }
+                        }
+                    }
+                }
+            } else {
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`,
+                        'HTTP-Referer': window.location.origin,
+                        'X-Title': 'Structured Prompt Builder'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+
+                const result = await response.json();
+                const output = result.choices?.[0]?.message?.content || 'No response';
+                const usage = result.usage;
+
+                resultDiv.innerHTML = `
+                        <div style="margin-top: 1rem;">
+                            <label class="label">AI Response</label>
+                            <div class="editor" style="min-height: 200px;">${output}</div>
+                            ${usage ? `
+                                <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-tertiary);">
+                                    Tokens: ${usage.prompt_tokens} prompt + ${usage.completion_tokens} completion = ${usage.total_tokens} total
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+            }
+        } catch (error) {
+            resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+        }
+    }
+
+
+
+    init();
+</script>
 </body>
 </html>

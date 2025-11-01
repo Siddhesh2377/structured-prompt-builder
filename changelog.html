@@ -1,218 +1,398 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Change Log – Structured Prompt Builder</title>
     <link rel="canonical" href="https://structured-prompt-builder.vercel.app/changelog.html" />
-
-    <!-- Primary Meta -->
     <meta name="description" content="Release notes and change history for Structured Prompt Builder." />
     <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#111111" />
-
-    <!-- Open Graph / Twitter -->
+    <meta name="theme-color" content="#2563eb" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Change Log – Structured Prompt Builder" />
     <meta property="og:description" content="Release notes and update history." />
-    <meta property="og:image" content="https://structured-prompt-builder.vercel.app/res/preview.png" />
     <meta name="twitter:card" content="summary_large_image" />
-
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
     <style>
-        :root { color-scheme: light dark; }
-
-        /* ===== Header (mobile solid with scrollable action strip) ===== */
-        .hdr {
-            position: sticky; top: 0; z-index: 20;
-            background: color-mix(in oklab, #ffffff 90%, transparent);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid #e5e7eb;
-            padding-top: max(0px, env(safe-area-inset-top));
-        }
-        .dark .hdr {
-            background: color-mix(in oklab, #0f0f0f 82%, transparent);
-            border-color: #262626;
-        }
-        .hdr-actions {
-            overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-            gap: .5rem;
-        }
-        .hdr-actions::-webkit-scrollbar { display: none; }
-        .hdr-title { font-size: 1.25rem; }
-        @media (max-width: 640px){
-            .hdr-title { font-size: 1.05rem; }
-            .hdr-sub { display:none; }
-            .hdr-btn { padding:.45rem .55rem; }
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            --border: #e5e7eb;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-light: #dbeafe;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        /* ===== Minimal button utilities (header only) ===== */
-        .btn {
-            display:inline-flex; align-items:center; justify-content:center;
-            border-radius:.375rem; padding:.5rem .75rem; font-size:.875rem; font-weight:500;
-            transition: background .15s, border-color .15s;
+        [data-theme="dark-slate"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --border: #334155;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-light: #1e3a8a;
         }
-        .btn-muted {
-            background:#ffffff; color:#111827; border:1px solid #e5e7eb;
-        }
-        .btn-muted:hover { background:#f3f4f6; }
-        .dark .btn-muted {
-            background:#0f0f0f; color:#e5e7eb; border:1px solid #333;
-        }
-        .dark .btn-muted:hover { background:#1a1a1a; }
 
-        /* ===== Card & content ===== */
-        .card {
-            background:#ffffff; border:1px solid #e5e7eb; border-radius:.75rem;
-            box-shadow:0 1px 2px rgba(0,0,0,.04); padding:1rem; margin-bottom:1rem;
+        [data-theme="dark-midnight"] {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: #171717;
+            --text-primary: #fafafa;
+            --text-secondary: #a3a3a3;
+            --text-tertiary: #737373;
+            --border: #262626;
+            --accent: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --accent-light: #4c1d95;
         }
-        .dark .card { background:#0a0a0a; border-color:#262626; }
 
-        /* Keep default colors; don’t force override on children */
-        .prose-like {
-            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-            line-height:1.65; color:#374151;
+        [data-theme="light-warm"] {
+            --bg-primary: #fffbeb;
+            --bg-secondary: #fef3c7;
+            --bg-tertiary: #fde68a;
+            --text-primary: #78350f;
+            --text-secondary: #92400e;
+            --text-tertiary: #b45309;
+            --border: #fbbf24;
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --accent-light: #fef3c7;
         }
-        .dark .prose-like { color:#e5e5e5; }
-        .reading .prose-like { font-family: ui-serif, Georgia, "Times New Roman", serif; line-height:1.8; }
 
-        /* Version tags with dark-mode variants */
-        .tag { display:inline-block; border-radius:9999px; padding:.125rem .5rem; font-size:.7rem; font-weight:600; margin-right:.25rem; }
-        .tag-add    { background:#ecfdf5; color:#065f46; }
-        .tag-fix    { background:#fef2f2; color:#991b1b; }
-        .tag-change { background:#eff6ff; color:#1e3a8a; }
-        .dark .tag-add    { background:#064e3b; color:#d1fae5; }
-        .dark .tag-fix    { background:#7f1d1d; color:#fee2e2; }
-        .dark .tag-change { background:#1e3a8a; color:#dbeafe; }
+        [data-theme="light-cool"] {
+            --bg-primary: #f0f9ff;
+            --bg-secondary: #e0f2fe;
+            --bg-tertiary: #bae6fd;
+            --text-primary: #0c4a6e;
+            --text-secondary: #075985;
+            --text-tertiary: #0284c7;
+            --border: #7dd3fc;
+            --accent: #0ea5e9;
+            --accent-hover: #0284c7;
+            --accent-light: #e0f2fe;
+        }
 
-        /* Permalink */
-        .permalink { opacity:.7; color:#6b7280; text-decoration:none; }
-        .permalink:hover { opacity:1; color:#374151; }
-        .dark .permalink { color:#9ca3af; }
-        .dark .permalink:hover { color:#e5e7eb; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-tertiary);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn-primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .nav-btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .theme-selector {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .theme-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .theme-btn:hover { transform: scale(1.1); }
+        .theme-btn.active { box-shadow: 0 0 0 2px var(--accent); }
+
+        .theme-btn-default { background: linear-gradient(135deg, #ffffff 50%, #1f2937 50%); }
+        .theme-btn-slate { background: #1e293b; }
+        .theme-btn-midnight { background: #000000; }
+        .theme-btn-warm { background: #fef3c7; }
+        .theme-btn-cool { background: #e0f2fe; }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .version-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .version-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .version-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .version-date {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+
+        .section-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin: 1rem 0 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .change-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .change-item {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-primary);
+        }
+
+        .change-item:before {
+            content: "•";
+            position: absolute;
+            left: 0.5rem;
+            color: var(--accent);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .tag-added { background: #dcfce7; color: #166534; }
+        .tag-changed { background: #dbeafe; color: #1e40af; }
+        .tag-fixed { background: #fee2e2; color: #991b1b; }
+
+        [data-theme="dark-slate"] .tag-added,
+        [data-theme="dark-midnight"] .tag-added { background: #064e3b; color: #d1fae5; }
+        [data-theme="dark-slate"] .tag-changed,
+        [data-theme="dark-midnight"] .tag-changed { background: #1e3a8a; color: #dbeafe; }
+        [data-theme="dark-slate"] .tag-fixed,
+        [data-theme="dark-midnight"] .tag-fixed { background: #7f1d1d; color: #fee2e2; }
+
+        .footer {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 2rem 1.5rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 2rem; }
+            .version-number { font-size: 1.25rem; }
+            .header-content { justify-content: center; }
+            .nav-links { width: 100%; justify-content: center; }
+        }
     </style>
-
-    <!-- Structured data for latest release -->
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "Structured Prompt Builder",
-            "applicationCategory": "DeveloperApplication",
-            "operatingSystem": "Any",
-            "softwareVersion": "0.3.0",
-            "releaseNotes": "Library (save/load/duplicate/delete), SMILE format export, section editor rendering & preview sync, UI polish."
-        }
-    </script>
 </head>
-<body class="bg-gray-100 dark:bg-neutral-950 font-sans">
-
-<header class="hdr">
-    <div class="w-full max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-col gap-2">
-        <!-- Row 1: brand + quick toggles -->
-        <div class="flex items-center justify-between gap-3">
-            <a href="/" class="min-w-0 inline-flex items-center gap-2 text-left" title="Back to builder">
-                <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M15 4V2M15 8v2M19 6h2M11 6H9M18.364 1.636l-1.414 1.414M18.364 10.364l-1.414-1.414M11.05 1.636 12.464 3.05M11.05 10.364 12.464 8.95"/>
-                    <path d="m3 21 9-9"/><path d="M5 19l-2-2"/>
+<body>
+<header class="header">
+    <div class="header-content">
+        <a href="/" class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+            </svg>
+            Structured Prompt Builder
+        </a>
+        <div class="nav-links">
+            <a href="index.html" class="nav-btn nav-btn-primary">Open Builder</a>
+            <a href="https://github.com/Siddhesh2377/structured-prompt-builder" target="_blank" rel="noopener" class="nav-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.03-.02-2.02-3.2.7-3.88-1.37-3.88-1.37-.53-1.35-1.3-1.71-1.3-1.71-1.06-.73.08-.72.08-.72 1.17.08 1.79 1.21 1.79 1.21 1.05 1.79 2.76 1.27 3.44.97.11-.76.41-1.27.75-1.56-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.28 1.2-3.08-.12-.3-.52-1.5.11-3.12 0 0 .98-.31 3.22 1.2.93-.26 1.93-.4 2.93-.4s2 .14 2.93.4c2.24-1.51 3.22-1.2 3.22-1.2.63 1.62.23 2.82.11 3.12.75.8 1.2 1.82 1.2 3.08 0 4.42-2.7 5.39-5.28 5.68.42.36.8 1.06.8 2.14 0 1.54-.01 2.79-.01 3.17 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/>
                 </svg>
-                <div class="leading-tight min-w-0">
-                    <h1 class="hdr-title font-semibold text-gray-900 dark:text-white tracking-tight truncate">Structured Prompt Builder</h1>
-                    <p class="hdr-sub text-xs text-gray-600 dark:text-neutral-400 truncate">Change Log & Release Notes</p>
-                </div>
+                GitHub
             </a>
-
-            <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-                <button id="themeToggle"
-                        class="hdr-btn btn btn-muted p-2"
-                        title="Toggle dark / light" aria-label="Toggle theme">
-                    <svg id="sunIcon" class="w-5 h-5 hidden dark:inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-                    </svg>
-                    <svg id="moonIcon" class="w-5 h-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </svg>
-                </button>
-
-                <button id="readingToggle"
-                        class="hdr-btn btn btn-muted px-2.5 sm:px-3 py-2 text-sm"
-                        title="Reading mode" aria-label="Reading mode">
-                    <span class="hidden sm:inline">Reading</span>
-                    <span class="sm:hidden">Aa</span>
-                </button>
-            </div>
+            <a href="https://github.com/sponsors/Siddhesh2377" target="_blank" rel="noopener" class="nav-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                Sponsor
+            </a>
         </div>
-
-        <!-- Row 2: scrollable action strip on mobile -->
-        <div class="hdr-actions flex items-center -mx-1 px-1 sm:mx-0 sm:px-0">
-            <a href="index.html" class="hdr-btn btn btn-muted" title="Open Builder">Open Builder</a>
-
-            <a href="https://github.com/Siddhesh2377/structured-prompt-builder" target="_blank" rel="noopener"
-               class="hdr-btn btn btn-muted" aria-label="GitHub repository">
-                <svg class="w-5 h-5 mr-2 hidden sm:inline" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.03-.02-2.02-3.2.7-3.88-1.37-3.88-1.37-.53-1.35-1.3-1.71-1.3-1.71-1.06-.73.08-.72.08-.72 1.17.08 1.79 1.21 1.79 1.21 1.05 1.79 2.76 1.27 3.44.97.11-.76.41-1.27.75-1.56-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.28 1.2-3.08-.12-.3-.52-1.5.11-3.12 0 0 .98-.31 3.22 1.2.93-.26 1.93-.4 2.93-.4s2 .14 2.93.4c2.24-1.51 3.22-1.2 3.22-1.2.63 1.62.23 2.82.11 3.12.75.8 1.2 1.82 1.2 3.08 0 4.42-2.7 5.39-5.28 5.68.42.36.8 1.06.8 2.14 0 1.54-.01 2.79-.01 3.17 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
-                <span class="">GitHub</span>
-            </a>
-
-            <a href="https://github.com/Siddhesh2377/structured-prompt-builder/stargazers" target="_blank" rel="noopener"
-               class="hdr-btn btn btn-muted" aria-label="GitHub Stars">
-                <img src="https://img.shields.io/github/stars/Siddhesh2377/structured-prompt-builder?style=social"
-                     alt="GitHub stars" class="h-5 sm:h-6" loading="lazy" />
-            </a>
-
-            <a href="https://github.com/sponsors/Siddhesh2377" target="_blank" rel="noopener"
-               class="hdr-btn btn btn-muted" aria-label="Sponsor">Sponsor</a>
+        <div class="theme-selector">
+            <button class="theme-btn theme-btn-default active" data-theme="default" title="Default"></button>
+            <button class="theme-btn theme-btn-slate" data-theme="dark-slate" title="Dark Slate"></button>
+            <button class="theme-btn theme-btn-midnight" data-theme="dark-midnight" title="Dark Midnight"></button>
+            <button class="theme-btn theme-btn-warm" data-theme="light-warm" title="Light Warm"></button>
+            <button class="theme-btn theme-btn-cool" data-theme="light-cool" title="Light Cool"></button>
         </div>
     </div>
 </header>
 
+<div class="container">
+    <h1 class="page-title">Change Log</h1>
+    <p class="page-subtitle">All notable changes to this project are documented here</p>
+    <div id="changelog"></div>
+</div>
 
-<main class="max-w-4xl mx-auto px-4 py-8 prose-like">
-    <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Change Log</h2>
-    <p class="text-gray-600 dark:text-neutral-400 mb-6">All notable changes to this project will be documented here.</p>
-
-    <div id="log" class="space-y-4"></div>
-</main>
-
-<footer class="max-w-4xl mx-auto px-4 pb-12 text-sm text-gray-500 dark:text-neutral-400">
-    <hr class="border-gray-200 dark:border-neutral-800 mb-4" />
+<footer class="footer">
     <p>Want updates? Star the repo on GitHub or check this page occasionally.</p>
 </footer>
 
-<!-- Theme/Reading toggles -->
-<script>
-    (function () {
-        const root = document.documentElement; const body = document.body;
-        const storedTheme = localStorage.getItem('spb-theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = storedTheme || (prefersDark ? 'dark' : 'light');
-        if (theme === 'dark') root.classList.add('dark');
-        const reading = localStorage.getItem('spb-reading') === '1';
-        if (reading) body.classList.add('reading');
-        document.getElementById('themeToggle')?.addEventListener('click', () => {
-            root.classList.toggle('dark');
-            localStorage.setItem('spb-theme', root.classList.contains('dark') ? 'dark' : 'light');
-        });
-        document.getElementById('readingToggle')?.addEventListener('click', () => {
-            body.classList.toggle('reading');
-            localStorage.setItem('spb-reading', body.classList.contains('reading') ? '1' : '0');
-        });
-    })();
-</script>
-
-<!-- Render the change log -->
 <script>
     const CHANGELOG = [
+        {
+            version: "1.0.0",
+            date: "2025-11-01",
+            highlights: [
+                "Complete UI redesign with Claude.ai-inspired minimal interface",
+                "5 beautiful color themes (2 dark, 3 light)",
+                "Built-in editors: JSON, Markdown, Plain Text",
+                "OpenRouter API integration with dynamic model fetching",
+                "Sample prompt loader with realistic examples"
+            ],
+            added: [
+                "Theme selector with 5 unique color schemes",
+                "Built-in content editors with live preview",
+                "OpenRouter model fetching from API",
+                "Sample prompt button with pre-filled examples",
+                "Persistent API key storage",
+                "Loading states and error handling"
+            ],
+            changed: [
+                "Completely redesigned UI with modern aesthetics",
+                "Simplified navigation and layout",
+                "Improved form field organization",
+                "Enhanced visual feedback and animations"
+            ],
+            fixed: [
+                "Model dropdown now requires API key",
+                "Better mobile responsiveness",
+                "Improved theme persistence"
+            ]
+        },
         {
             version: "0.3.2-fix-final",
             date: "2025-09-03",
             highlights: [
                 "Fix Header Collapse on Small Screen & Mobile Devices"
             ],
-            added: [],
-            changed: [],
-            fixed: []
+            fixed: [
+                "Header layout issues on mobile devices",
+                "Responsive design improvements"
+            ]
         },
         {
             version: "0.3.2",
@@ -221,12 +401,17 @@
                 "Change Log Page",
                 "Fix Light Mode",
                 "Added OpenAI 4.0 endpoints",
-                "Added Support For All OpenAi ( Online / Offline LLama.cpp ) Supported Models ..! Experimental",
-
+                "Added Support For All OpenAI Compatible Models"
             ],
-            added: [],
-            changed: [],
-            fixed: []
+            added: [
+                "Dedicated change log page",
+                "OpenAI 4.0 endpoint support",
+                "Support for offline LLama.cpp models"
+            ],
+            fixed: [
+                "Light mode styling issues",
+                "Model compatibility improvements"
+            ]
         },
         {
             version: "0.3.1",
@@ -235,9 +420,10 @@
                 "New Change Log page with dark/reading modes",
                 "Header button linking from the builder"
             ],
-            added: [],
-            changed: [],
-            fixed: []
+            added: [
+                "Change log page with theme support",
+                "Navigation improvements"
+            ]
         },
         {
             version: "0.3.0",
@@ -246,19 +432,19 @@
                 "Local Library: save, load, rename, duplicate, delete",
                 "SMILE export/preview format",
                 "Section editors visible + list controls",
-                "Preview ↔ Output format kept in sync",
-                "Small UX polish and placeholders"
+                "Preview ↔ Output format kept in sync"
             ],
             added: [
-                "Library drawer UI with Save / Save as New",
-                "SMILE (Simple Markup for Instruction Language) text format"
+                "Library management system",
+                "SMILE format export",
+                "Section editor controls"
             ],
             changed: [
-                "Markdown preview now human-readable (no punctuation stripping)"
+                "Markdown preview now human-readable"
             ],
             fixed: [
-                "Sections (Constraints/Steps/Inputs/Examples) not rendering",
-                "Generation using wrong format when tab switched"
+                "Sections not rendering correctly",
+                "Format synchronization issues"
             ]
         },
         {
@@ -266,14 +452,13 @@
             date: "2025-08-30",
             highlights: [
                 "Gemini + OpenAI optimize buttons",
-                "Basic parameters editing (temperature, top_p, max_tokens)"
+                "Basic parameters editing"
             ],
             added: [
                 "Gemini 1.5 endpoints",
-                "OpenAI chat completions call"
-            ],
-            changed: [],
-            fixed: []
+                "OpenAI chat completions",
+                "Parameter controls (temperature, top_p, max_tokens)"
+            ]
         },
         {
             version: "0.1.0",
@@ -283,53 +468,68 @@
                 "Structured fields: role, task, audience, style, tone",
                 "Export: Markdown, JSON, YAML",
                 "Dark mode + Reading mode"
-            ],
-            changed: [],
-            fixed: []
+            ]
         }
     ];
 
-    function slug(v){ return 'v' + v.replace(/\./g,'-'); }
-
-    function pill(label, cls){
-        return `<span class="tag ${cls}">${label}</span>`;
+    function renderChangelog() {
+        const container = document.getElementById('changelog');
+        container.innerHTML = CHANGELOG.map(version => `
+                <div class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">v${version.version}</div>
+                        <div class="version-date">${new Date(version.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    </div>
+                    ${version.highlights.length ? `
+                        <div class="section-title">Highlights</div>
+                        <ul class="change-list">
+                            ${version.highlights.map(item => `<li class="change-item">${item}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                    ${version.added && version.added.length ? `
+                        <div class="section-title"><span class="tag tag-added">Added</span></div>
+                        <ul class="change-list">
+                            ${version.added.map(item => `<li class="change-item">${item}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                    ${version.changed && version.changed.length ? `
+                        <div class="section-title"><span class="tag tag-changed">Changed</span></div>
+                        <ul class="change-list">
+                            ${version.changed.map(item => `<li class="change-item">${item}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                    ${version.fixed && version.fixed.length ? `
+                        <div class="section-title"><span class="tag tag-fixed">Fixed</span></div>
+                        <ul class="change-list">
+                            ${version.fixed.map(item => `<li class="change-item">${item}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                </div>
+            `).join('');
     }
 
-    function renderItem(it){
-        const id = slug(it.version);
-        const highlights = (it.highlights||[]).map(s=>`<li>${s}</li>`).join('');
-        const added = (it.added||[]).map(s=>`<li>${s}</li>`).join('');
-        const changed = (it.changed||[]).map(s=>`<li>${s}</li>`).join('');
-        const fixed = (it.fixed||[]).map(s=>`<li>${s}</li>`).join('');
+    const state = {
+        theme: localStorage.getItem('theme') || 'default'
+    };
 
-        return `
-    <article id="${id}" class="card p-4">
-      <div class="flex items-center justify-between gap-2">
-        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-          ${it.version}
-          <a href="#${id}" class="permalink text-gray-500 dark:text-neutral-400 ml-2" title="Permalink">#</a>
-        </h3>
-        <div class="text-sm text-gray-600 dark:text-neutral-400">${new Date(it.date).toLocaleDateString()}</div>
-      </div>
+    function init() {
+        document.documentElement.setAttribute('data-theme', state.theme);
+        document.querySelector(`[data-theme="${state.theme}"]`)?.classList.add('active');
 
-      ${highlights ? `<div class="mt-2">
-        <div class="mb-1 text-sm font-medium text-gray-700 dark:text-neutral-300">Highlights</div>
-        <ul class="list-disc pl-5">${highlights}</ul>
-      </div>` : ''}
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                state.theme = btn.dataset.theme;
+                localStorage.setItem('theme', state.theme);
+                document.documentElement.setAttribute('data-theme', state.theme);
+                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
 
-      <div class="grid md:grid-cols-3 gap-4 mt-3">
-        ${added ? `<div><div class="mb-1">${pill('Added','tag-add')}</div><ul class="list-disc pl-5">${added}</ul></div>` : ''}
-        ${changed ? `<div><div class="mb-1">${pill('Changed','tag-change')}</div><ul class="list-disc pl-5">${changed}</ul></div>` : ''}
-        ${fixed ? `<div><div class="mb-1">${pill('Fixed','tag-fix')}</div><ul class="list-disc pl-5">${fixed}</ul></div>` : ''}
-      </div>
-    </article>
-  `;
+        renderChangelog();
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const holder = document.getElementById('log');
-        holder.innerHTML = CHANGELOG.map(renderItem).join('');
-    });
+    init();
 </script>
 </body>
 </html>
