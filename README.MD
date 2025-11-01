@@ -1,124 +1,207 @@
 # Structured Prompt Builder
 
-A lightweight, browser‑first tool for designing **well‑structured AI prompts** with a clean UI, live previews, a local **Prompt Library**, and optional **Gemini‑powered prompt optimization**.
+A modern, browser-based tool for crafting **structured AI prompts** with a beautiful minimal UI inspired by Claude.ai. Features live preview in multiple formats, persistent library storage, and direct testing with **OpenRouter AI models**.
 
-> **Support development**  
-> If this tool saves you time, consider sponsoring to help keep it free and add features like template sharing and cloud sync.  
+> **Support Development**  
+> If this tool saves you time, consider sponsoring to help maintain and add new features.  
 > **👉 [Become a sponsor](https://github.com/sponsors/Siddhesh2377)**
 
 [![Sponsor](https://img.shields.io/badge/Sponsor-@Siddhesh2377-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/Siddhesh2377)
+[![GitHub Stars](https://img.shields.io/github/stars/Siddhesh2377/structured-prompt-builder?style=social)](https://github.com/Siddhesh2377/structured-prompt-builder)
 
+## ✨ Features
 
-## Highlights
+### Core Functionality
+- **Structured Fields**: Title, Role, Task, Context with organized input sections
+- **Dynamic Lists**: Add/remove Constraints and Examples with intuitive controls
+- **Live Preview**: Real-time updates in JSON, Markdown, and Plain Text formats
+- **Built-in Editors**: Directly edit exported content in any format
+- **Local Library**: Save, load, and delete prompts with persistent browser storage
 
-* **Structured fields**: Role, Task, Audience, Style, Tone, Constraints, Steps, Inputs (`name: value`), Few‑shot examples
-* **Live preview** in **Markdown**, **JSON**, and **YAML**
-* **Copy / Download** each format in one click; **Import from JSON**
-* **Model parameters**: Temperature, Top‑p, Max tokens, Presence & Frequency penalties
-* **Local Prompt Library** (save, load, duplicate, delete) using `localStorage`
-* **Gemini Optimizer** (optional): cleans grammar/clarity **without changing your schema**
-* Built‑in dark/light friendly styles; focused **reading mode** for long prompts
+### AI Testing
+- **OpenRouter Integration**: Test prompts with 100+ AI models
+- **Dynamic Model Loading**: Fetches available models directly from OpenRouter API
+- **Advanced Parameters**: 
+  - Temperature (0-2) - Control creativity
+  - Max Tokens - Set response length
+  - Top P - Nucleus sampling
+  - Top K - Token selection limit
+  - Frequency Penalty - Reduce repetition
+  - Presence Penalty - Encourage new topics
+  - Streaming Responses - Real-time output
+  - JSON Mode - Structured outputs
+- **Token Usage Stats**: Monitor prompt and completion tokens
 
-## Tech Stack
+### Design & UX
+- **5 Beautiful Themes**: 
+  - Default (Light/Dark split)
+  - Dark Slate
+  - Dark Midnight
+  - Light Warm
+  - Light Cool
+- **Smooth Animations**: Subtle transitions and hover effects throughout
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
+- **Sample Prompts**: Pre-filled examples to get started quickly
 
-* **React 18 (UMD)** for UI
-* **Tailwind‑style utility classes** (or your own CSS)
-* **Babel Standalone** (optional) for in‑browser JSX
-* **Vercel** for zero‑config deploys
+## 🚀 Quick Start
 
-## Quick Start (no build step)
+### No Build Required
 
-1. **Clone** the repo
-
+1. **Clone the repository**
    ```bash
    git clone https://github.com/Siddhesh2377/structured-prompt-builder.git
    cd structured-prompt-builder
    ```
-2. **Open** `index.html` directly in the browser **or** serve the folder:
 
+2. **Open in browser**
+
+   Simply open `index.html` in your browser, or use a local server:
    ```bash
    npx serve .
    ```
-3. Start editing `src/app.jsx` (or the inlined script). Refresh to see changes.
 
-## Usage
+3. **Get an OpenRouter API Key**
+    - Visit [OpenRouter](https://openrouter.ai/)
+    - Sign up and get your API key
+    - Enter it in the app (stored securely in your browser)
 
-1. Fill out the **Prompt Composition** fields (Role, Task, etc.).
-2. Use **Sections** to add Constraints, Steps, Inputs, and Examples.
-3. Switch **Preview** tabs (MD/JSON/YAML). Click **Copy** or **Download**.
-4. **Save** to the local **Prompt Library**; later **Load**, **Duplicate**, or **Delete**.
-5. To **Import**, choose a JSON file that matches the app’s schema.
+## 📖 Usage Guide
 
-### Gemini Prompt Optimizer (optional)
+### Building a Prompt
 
-1. Paste your **Gemini API key** (stored locally under `gemini_api_key`).
-2. Choose a **model** (e.g., `gemini-1.5-flash`) and an **Output format** (MD/JSON/YAML).
-3. Click **Generate with Gemini**.
+1. **Fill Basic Information**
+    - Enter a title for your prompt
+    - Define the AI's role (e.g., "Expert technical writer")
+    - Describe the main task
+    - Add relevant context
 
-**What it does:**
+2. **Add Constraints**
+    - Click "Add" to create rules the AI must follow
+    - Use the up/down arrows to reorder
+    - Remove unwanted items with the × button
 
-* Fixes spelling/grammar and clarifies wording.
-* **Preserves the original structure/keys** and array order/length.
-* Returns **only** the selected format—no commentary or code fences.
+3. **Provide Examples**
+    - Add input/output examples for few-shot learning
+    - Format: "Input: ... → Output: ..."
 
-> Tip: For the strictest structure preservation, choose **JSON** as the output format.
+4. **Preview & Edit**
+    - Switch between JSON, Markdown, and Plain Text formats
+    - Click in the editor to make direct changes
+    - Copy the formatted output
 
-![Star History Chart](https://api.star-history.com/svg?repos=Siddhesh2377/structured-prompt-builder&type=Date&cachebust={{DATE}})
+### Saving & Loading
 
+1. **Save to Library**
+    - Click "Save to Library" to store your prompt
+    - Prompts are saved in your browser's localStorage
+    - No account or internet connection needed
 
-## Project Structure
+2. **Load Sample**
+    - Click "Load Sample" to see a pre-filled example
+    - Great for understanding the structure
+
+3. **Manage Library**
+    - View all saved prompts below the form
+    - Load any prompt with one click
+    - Delete prompts you no longer need
+
+### Testing with AI
+
+1. **Enter API Key**
+    - Paste your OpenRouter API key
+    - It's saved automatically for future sessions
+    - The key never leaves your browser except to call OpenRouter
+
+2. **Select Model**
+    - Models load automatically after entering your key
+    - Popular models appear first (Claude, GPT-4, Gemini, Llama)
+    - All OpenRouter models available in alphabetical order
+
+3. **Configure Parameters** (Optional)
+    - Click "Advanced Settings" to reveal parameters
+    - Adjust temperature, max tokens, penalties, etc.
+    - Enable streaming for real-time responses
+    - Turn on JSON mode for structured outputs
+
+4. **Test Your Prompt**
+    - Enter test input in the text area
+    - Click "Test Prompt"
+    - View AI response with token usage statistics
+
+## 🎨 Themes
+
+Switch between 5 carefully designed themes using the color circles in the header:
+- **Default**: Classic light theme with dark mode hint
+- **Dark Slate**: Professional blue-gray dark theme
+- **Dark Midnight**: Pure black theme for OLED displays
+- **Light Warm**: Cozy amber-tinted light theme
+- **Light Cool**: Fresh sky-blue light theme
+
+Your theme choice persists across sessions.
+
+## 🏗️ Project Structure
 
 ```
 structured-prompt-builder/
+├── index.html              # Main entry point
+├── changelog.html          # Version history
 ├── public/
 │   ├── favicon.ico
-│   ├── image.png
 │   ├── robots.txt
-│   ├── sitemap.xml
-│   └── site.webmanifest
-├── src/
-│   ├── app.jsx              # Main application logic (builder + library + Gemini)
-│   ├── components/
-│   │   └── Section.jsx      # Reusable list editor
-│   └── utils/
-│       └── jsonToYaml.js    # JSON → YAML helper (small, dependency‑free)
-├── index.html               # Entry point (loads React UMD, app script, styles)
-└── vercel.json              # Static deploy config
+│   └── sitemap.xml
+└── README.md
 ```
 
-## Deployment (Vercel)
+## 🔒 Privacy & Security
 
-```bash
-vercel
-```
+- **No Backend**: Everything runs in your browser
+- **Local Storage**: All prompts saved to browser localStorage
+- **API Keys**: Stored locally, only sent to OpenRouter
+- **No Tracking**: No analytics or third-party scripts
+- **Open Source**: Full transparency, audit the code yourself
 
-Vercel will detect a static site and deploy automatically.
+## 🛣️ Roadmap
 
-## Privacy & Storage
+Future enhancements under consideration:
+- [ ] Export/Import prompt collections
+- [ ] Prompt versioning and change history
+- [ ] Collaborative prompt sharing (opt-in)
+- [ ] Custom parameter presets
+- [ ] Prompt templates marketplace
+- [ ] Multi-model comparison testing
+- [ ] Cost estimation per request
 
-* **No server**: All data (library items, API key) lives in your **browser** (`localStorage`).
-* **Keys** are never sent anywhere except directly to Google’s Gemini endpoint when you click **Generate**.
+## 🤝 Contributing
 
-## Roadmap / Contributions
+Contributions are welcome! Here's how you can help:
 
-PRs and ideas are welcome. Potential improvements:
+1. **Report Bugs**: Open an issue with details and steps to reproduce
+2. **Suggest Features**: Share your ideas in the discussions
+3. **Submit PRs**: Fork, create a branch, make changes, and submit
+4. **Improve Docs**: Help make the documentation clearer
 
-* Prompt metadata (name, version, author, tags)
-* Template gallery & sharing
-* Cloud export/import providers (Drive, Dropbox, GitHub Gist)
-* Streaming + token usage stats
+### Development Guidelines
+- Keep the no-build philosophy (vanilla JS/React UMD)
+- Maintain the minimal, clean aesthetic
+- Ensure mobile responsiveness
+- Add comments for complex logic
+- Test across browsers (Chrome, Firefox, Safari)
 
-Fork → branch → PR. Please include a brief description and before/after screenshots for UI changes.
+## 📜 License
 
-# Structured Prompt Builder
+MIT License - See [LICENSE](LICENSE) for details.
 
-<p>
-  <a href="https://github.com/sponsors/Siddhesh2377" target="_blank" rel="noopener"
-     style="display:inline-block;padding:8px 14px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#111827;font-weight:600;text-decoration:none;">
-    Sponsor this project
-  </a>
-</p>
+## 🙏 Acknowledgments
 
-## License
+- Design inspired by Claude.ai's minimal interface
+- Icons from Lucide icon set
+- Powered by OpenRouter for AI model access
+- Built with React and vanilla JavaScript
 
-MIT. See [LICENSE](LICENSE).
+---
+
+**Made with ❤️ by [Siddhesh2377](https://github.com/Siddhesh2377)**
+
+If this project helps you, please consider [⭐ starring it on GitHub](https://github.com/Siddhesh2377/structured-prompt-builder) and [💝 sponsoring development](https://github.com/sponsors/Siddhesh2377)!
+
+![Star History Chart](https://api.star-history.com/svg?repos=Siddhesh2377/structured-prompt-builder&type=Date)
